@@ -6,31 +6,22 @@ export function calculateCost(usage) {
 }
 
 export function extractOutput(message) {
-  // Regex to extract thinking and answer texts
-  const thinkingRegex = /<thinking>(.*?)<\/thinking>/gs;
-  const answerRegex = /<output>(.*?)<\/output>/gs;
-  const analysisRegex = /<analysis>(.*?)<\/analysis>/gs;
-  // Initialize arrays to store thinking and answer texts
-  const thinkingTexts = [];
-  const answerTexts = [];
-  const analysisTexts = [];
+  // Find all unique tags in the message
+  const tagRegex = /<([a-zA-Z_]+)>(.*?)<\/\1>/gs;
+  const tagResults = {};
 
-  // Initialize match variable
   let match;
+  while ((match = tagRegex.exec(message)) !== null) {
+    const tagName = match[1];
+    const tagContent = match[2].trim();
 
-  // Extract thinking texts
-  while ((match = thinkingRegex.exec(message)) !== null) {
-    thinkingTexts.push(match[1].trim());
-  }
+    // Initialize array for this tag type if it doesn't exist
+    if (!tagResults[tagName]) {
+      tagResults[tagName] = [];
+    }
 
-  // Extract answer texts
-  while ((match = answerRegex.exec(message)) !== null) {
-    answerTexts.push(match[1].trim());
+    // Add the content to the array for this tag type
+    tagResults[tagName].push(tagContent);
   }
-
-  // Extract answer texts
-  while ((match = analysisRegex.exec(message)) !== null) {
-    analysisTexts.push(match[1].trim());
-  }
-  return [thinkingTexts[0], answerTexts[0], analysisTexts[0]];
+  return tagResults;
 }

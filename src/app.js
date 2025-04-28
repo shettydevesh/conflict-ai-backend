@@ -6,6 +6,7 @@ import config from "./config/configuration.js";
 import cors from "cors";
 import { successHandler, errorHandler } from "./config/morgan.js";
 import mainRoutes from "./routes/main.routes.js";
+import mainV2Routes from "./routes/mainv2.routes.js";
 import fileUpload from "express-fileupload";
 
 const app = express();
@@ -46,5 +47,6 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/api/v1", mainRoutes);
+app.use("/api/v2", mainV2Routes);
 
 export default app;
